@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Stack;
 import apps.AppEntry;
 
-public class shellCommand{
+public class ShellCommand {
+  private static Boolean running = false;
+
   public static void getProcs() throws IOException {
 
     String command = "powershell.exe  " +
@@ -54,13 +56,19 @@ public class shellCommand{
 
     while(!descriptions.isEmpty() && !processNames.isEmpty()){
       AppEntry newEntry = new AppEntry(descriptions.pop(), processNames.pop());
-      AppEntry.addEntry(newEntry);
+      if(!AppEntry.containsEntry(newEntry.getProcName(), newEntry.getDesc())){
+        AppEntry.addEntry(newEntry); //do not add duplicate entries
+      }
     }
 
     proc.getOutputStream().close();
     out.close();
 
-    System.out.println("The final result: ");
-    AppEntry.printEntries();
+    if(!running){
+      ShellManager manager = new ShellManager();
+      new Thread(manager).start();
+      running = true;
+    }
+
   }
 }

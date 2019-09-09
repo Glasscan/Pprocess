@@ -27,3 +27,19 @@ Managed to connect to localhost mySQL server
 ---Sept 03 2019---
 Began working on GUI
 sqlControl now has a properties file for security reasons
+End users must provide their own db.properties file
+
+
+---Sept 04 2019---
+Added a thread to manage sql statements
+
+
+---Sept 06 2019---
+Added the processes table to the MySQL Database
+Got rid of the GUI package and moved all the methods into Client.java
+Updated AppEntry to account for process run-times.
+
+
+---Sept 09 2019---
+
+Added some logic to control app entries.

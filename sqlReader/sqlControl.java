@@ -4,8 +4,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.sql.*;
-import javax.sql.DataSource;
+
+import java.util.Scanner; //temporary for testing
 import java.util.Properties;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+import sqlReader.StmtManager;
+
 
 public class sqlControl{
   private static String user = "";
@@ -28,12 +34,14 @@ public class sqlControl{
     catch(IOException e){
         e.printStackTrace();
         System.out.println("Could not setup DB properties.");
+        System.out.println("If db.properties does not exist check the readme for more info");
     }
 
   }
 
   public static void start(){
-
+    BlockingQueue<String> statements = new LinkedBlockingQueue<String>();
+    Scanner dogs = new Scanner(System.in);
   /*  try{
       DriverManager.registerDriver(
         (Driver) Class.forName("com.mysql.cj.jdbc.Driver").newInstance()
@@ -42,22 +50,26 @@ public class sqlControl{
     catch(ClassNotFoundException | InstantiationException | SQLException | IllegalAccessException e){
       e.printStackTrace();
     }*/
-    setup();
-    String myURL = "jdbc:mysql://localhost:3306/test";
+    setup(); //retrieve database properties
+
     try {
         Connection con = DriverManager.getConnection(
           sqlControl.db_url, sqlControl.user, sqlControl.password);
-        Statement stmt = con.createStatement();
+        StmtManager manager = new StmtManager(statements, con);
+        new Thread(manager).start();
 
-        String myQuery = "SELECT * FROM dogs";
-        ResultSet rs = stmt.executeQuery(myQuery);
-        while(rs.next())
-          System.out.println(rs.getString(1));
+        String myQuery = manager.setStatement();
+        while(true){
+          statements.put(myQuery);
+          myQuery = dogs.nextLine();
+          if(myQuery.equals("cats")) break;
+        }
         con.close();
        }
        // Handle any errors that may have occurred.
-       catch (SQLException e) {
+       catch (SQLException | InterruptedException e) {
            e.printStackTrace();
        }
     }
+
 }
