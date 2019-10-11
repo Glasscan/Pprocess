@@ -1,0 +1,88 @@
+---August 18 2019---
+
+created packages: client, apps, shell, sqlReader
+All empty files
+
+compile with: javac -cp "C:\javalib\mysql-connector-java-8.0.16.jar;." client/Main.java
+run with: java -cp ".;C:\javalib\mysql-connector-java-8.0.16.jar" client.Main
+
+*Can ignore the .jar files if they are already included for you.
+
+The client package holds the Main.java file which simply runs the program.
+Client.java is for the GUI built with the Swing library. (WIP)
+
+Apps is for the AppEntry class which will hold the formatted data obtained
+from the PowerShell script.
+
+The shell package will contain two java files. One for running the PowerShell
+script and building AppEntry objects. The other to build  and manage a thread
+which continuously runs said script.
+
+SqlReader will manage the MySQL commands. Undecided on the exact file format,
+but I plan on having a separate thread managing the queries.
+
+
+---August 19 2019---
+Managed to get the shell command to output the appropriate format. The result
+for any entry should be "Description" followed by "Process Name." Current
+session time will be displayed after I get the "shell" thread up and running.
+
+
+---August 21 2019---
+
+Cleaning up/Reorganizing of code; particularly shellCommand.java.
+Currently bugged such that duplicate programs appear twice.
+
+
+---August 22 2019---
+Added containsEntry() to AppEntry.java to ignore duplicates.
+Just added the connector jar cause I'm a monkey. Should be able to connect to
+localhost MySQL server now.
+
+
+---August 26 2019---
+Managed to connect to localhost mySQL server (after much pain)
+DB information used is stored on a local db.properties file. (See readme.txt.)
+
+
+---Sept 03 2019---
+Began working on GUI (must go through swing tutorial)
+
+
+---Sept 04 2019---
+Added threads to manage MySQL statements and the shell script output.
+Currently, shellManager thread updates apps every 5 seconds.
+SqlManager thread waits and runs as queries are passed to it. If there is an
+error in the query (a manual query made by the user and not the GUI) then a
+syntax error is thrown, but the program should still run normally.
+
+
+---Sept 06 2019---
+Added the processes table to the MySQL Database
+Got rid of the GUI package and moved all the methods into Client.java
+Updated AppEntry to account for process run-times.
+
+
+---Sept 09 2019---
+
+Added some logic to control app entries.
+Added better handling of SQL statements/results
+
+
+---Sept 10 2019---
+Added Query class to deal with differences between updateQuery()/executeQuery().
+Could argue that it would have been easier to hardcode something, but it looks
+nicer this way.
+
+
+---Oct 10 2019---
+Finally decided to clean up this CHANGELOG. Added README.txt for explanation.
+Also, just noticed that Windows Explorer is not considered a "Main Window".
+I don't know if this was intentional, but most people probably would not mind
+it.
+
+Increased the frequency at which the ShellManager threads check for Apps
+from once every 5 seconds to every 1 second.
+
+Also considering adding more values such as total CPU time (can retrieve
+average CPU time from this).

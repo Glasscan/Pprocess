@@ -69,6 +69,5 @@ public class ShellCommand {
       new Thread(manager).start();
       running = true;
     }
-
   }
 }

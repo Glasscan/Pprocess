@@ -7,8 +7,9 @@ import java.sql.*;
 import sqlReader.StmtManager;
 
 class StmtManager implements Runnable{
-  private final BlockingQueue<String> statements;
+  private final BlockingQueue<Query> statements;
   private final Connection con; //connection must be passed on
+
 
   public void run() {
     try {
@@ -20,24 +21,35 @@ class StmtManager implements Runnable{
     }
   }
 
-  void consume(String statement) {
-    System.out.println("DEVOURING: " + statement);
+  void consume(Query query) {
+    String statement = query.getStatement();
+    QueryType type = query.getType();
     try{
+      int i = 1;
       Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery(statement);
-      while(rs.next())
-        System.out.println(rs.getString(1));
+      ResultSet rs;
+      if(type == QueryType.EXECUTE){
+        rs = stmt.executeQuery(statement);
+      }
+      else{
+        stmt.executeUpdate(statement);
+        System.out.println("cats"); //for debugging
+        return;
+      }
+      ResultSetMetaData rsData = rs.getMetaData();
+
+      while(rs.next()){
+        while(i <= rsData.getColumnCount()){
+          System.out.print(rs.getString(i) + " ");
+          i++;
+        }
+        i = 1;
+        System.out.println();
+      }
     }catch (SQLException e) {e.printStackTrace();}
   }
 
-
-  public static String setStatement(){
-    String statement = "";
-    statement = "SELECT * FROM dogs";
-    return statement;
-  }
-
-  StmtManager(BlockingQueue<String> q, Connection con) {
+  StmtManager(BlockingQueue<Query> q, Connection con) {
     this.con = con;
     statements = q;
   }

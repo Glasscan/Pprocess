@@ -6,27 +6,24 @@ import java.io.IOException;
 class ShellManager implements Runnable{
 
   public void run(){
-    monkey();
+    scanApps();
   }
 
-  private void monkey(){
+  private void scanApps(){
     while(true){
     try{
-      Thread.sleep(5000);
+      Thread.sleep(1000);
       ShellCommand.getProcs();
       AppEntry.checkEntries();
-      AppEntry.printEntries();
-      System.out.println("-----------------------------------------");
+      AppEntry.printEntries(); //for debugging
 
     } catch(InterruptedException | IOException e){
-      e.printStackTrace();
-    }
+        e.printStackTrace();
+      }
 
     }
   }
-
   ShellManager(){
 
   }
-
 }

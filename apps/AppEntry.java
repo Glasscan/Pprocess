@@ -42,6 +42,7 @@ public class AppEntry{
         + entryList.get(i).getProcName() + '\t'
           + entryList.get(i).getSessionTime());
     }
+    System.out.println("-----------------------------------------");
   }
 
   public static Boolean containsEntry(String procName, String desc){

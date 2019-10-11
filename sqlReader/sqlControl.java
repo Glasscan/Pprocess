@@ -10,13 +10,12 @@ import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import sqlReader.StmtManager;
-
 
 public class sqlControl{
   private static String user = "";
   private static String password = "";
   private static String db_url = "";
+
 
   public static void setup(){
 
@@ -40,8 +39,8 @@ public class sqlControl{
   }
 
   public static void start(){
-    BlockingQueue<String> statements = new LinkedBlockingQueue<String>();
-    Scanner dogs = new Scanner(System.in);
+    BlockingQueue<Query> statements = new LinkedBlockingQueue<Query>();
+    Scanner newSTMT = new Scanner(System.in);
   /*  try{
       DriverManager.registerDriver(
         (Driver) Class.forName("com.mysql.cj.jdbc.Driver").newInstance()
@@ -58,12 +57,16 @@ public class sqlControl{
         StmtManager manager = new StmtManager(statements, con);
         new Thread(manager).start();
 
-        String myQuery = manager.setStatement();
+        String queryStmt = "";
         while(true){
+          queryStmt = newSTMT.nextLine();
+          if(queryStmt.equals("exodus")) break; //temporary for debugging
+          else if(queryStmt.length() < 6) continue; //so it doesn't break
+          Query myQuery = new Query(queryStmt);
           statements.put(myQuery);
-          myQuery = dogs.nextLine();
-          if(myQuery.equals("cats")) break;
+
         }
+        System.out.println("Closing connection...");
         con.close();
        }
        // Handle any errors that may have occurred.
@@ -71,5 +74,4 @@ public class sqlControl{
            e.printStackTrace();
        }
     }
-
 }
