@@ -13,7 +13,7 @@ public class ShellCommand {
   public static void getProcs() throws IOException {
 
     String command = "powershell.exe  " +
-      "get-process | where {$_.MainWindowTitle} | select Description, ProcessName | Format-List";
+      "get-process | where {$_.MainWindowTitle} | select Description, ProcessName, CPU | Format-List";
 
     //excute command in seperate process
     Process proc = Runtime.getRuntime().exec(command); //IOException
@@ -29,6 +29,7 @@ public class ShellCommand {
 
     Stack<String> descriptions = new Stack<String>();
     Stack<String> processNames = new Stack<String>();
+    Stack<Double> cpuTimes = new Stack<Double>();
 
     while((line = out.readLine()) != null){
       if(line.isEmpty()) continue; //ignore the whitespace
@@ -47,6 +48,10 @@ public class ShellCommand {
         else
           processNames.push(formatLine[1].trim());
       }
+      else if(formatLine[0].trim().equals("CPU")){//assumes cpu time not empty
+        cpuTimes.push(Double.parseDouble(formatLine[1].trim()));
+      }
+
       else
         System.out.println("Something went wrong...");
     }
@@ -55,9 +60,15 @@ public class ShellCommand {
       System.out.println("Something is amiss...");
 
     while(!descriptions.isEmpty() && !processNames.isEmpty()){
-      AppEntry newEntry = new AppEntry(descriptions.pop(), processNames.pop());
-      if(!AppEntry.containsEntry(newEntry.getProcName(), newEntry.getDesc())){
+      AppEntry newEntry = new AppEntry(
+        descriptions.pop(), processNames.pop(), cpuTimes.pop());
+      if(!AppEntry.containsEntry(
+          newEntry.getProcName(), newEntry.getDesc(), newEntry.getCPUTime())
+        ){
         AppEntry.addEntry(newEntry); //do not add duplicate entries
+      }
+      else{ //instead just update the CPU time
+
       }
     }
 

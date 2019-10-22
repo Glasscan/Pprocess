@@ -1,7 +1,9 @@
 package client;
 
 import sqlReader.sqlControl;
+import sqlReader.Query;
 import shell.ShellCommand;
+
 import java.io.IOException;
 
 public class Main{

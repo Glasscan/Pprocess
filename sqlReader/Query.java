@@ -1,5 +1,7 @@
 package sqlReader;
 
+import apps.AppEntry;
+
 public class Query {
   String statement;
   QueryType type;
@@ -34,6 +36,31 @@ public class Query {
 
   public Query(){
 
+  }
+
+  //build a new select statement from input
+  public static String newSelectQuery(){
+    String statement = "";
+    return statement;
+  }
+
+  //build a new insert/update statement
+
+  public static String newUpdateQuery(AppEntry entry){
+    String statement = "";
+    String processName = entry.getProcName();
+    String description = entry.getDesc();
+    double cpuTime = entry.getCPUTime() - entry.getInitialCPUTime();
+    long time = entry.getSessionTime();
+    entry.resetTime();
+    statement = String.format("INSERT INTO " +
+      "processes(Process_Name, Description, Total_Time, CPU_Time) " +
+      "VALUES('%s', '%s', '%d', '%f') " +
+      "ON DUPLICATE KEY UPDATE " +
+      "Total_Time = Total_Time + %d, CPU_Time = CPU_Time + %f;"
+      , processName, description, time, cpuTime, time, cpuTime);
+
+    return statement;
   }
 }
 

@@ -86,3 +86,13 @@ from once every 5 seconds to every 1 second.
 
 Also considering adding more values such as total CPU time (can retrieve
 average CPU time from this).
+
+---Oct 21 2019---
+Added total CPU time to the table via:
+ALTER TABLE test.processes
+	ADD CPU_Time INTEGER(10) DEFAULT(0);
+
+Added CPU(s) to the shell command and updated AppEntry to support it.
+Made the printEntries() function output a "formatted" string.
+
+Currently working on building new SQL statements. Must make updates automatic.

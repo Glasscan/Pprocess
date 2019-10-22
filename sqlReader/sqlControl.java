@@ -1,5 +1,7 @@
 package sqlReader;
 
+import apps.AppEntry;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -58,7 +60,7 @@ public class sqlControl{
         new Thread(manager).start();
 
         String queryStmt = "";
-        while(true){
+        while(true){ //currently requires input rather than automatic
           queryStmt = newSTMT.nextLine();
           if(queryStmt.equals("exodus")) break; //temporary for debugging
           else if(queryStmt.length() < 6) continue; //so it doesn't break

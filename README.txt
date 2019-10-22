@@ -100,4 +100,5 @@ CREATE TABLE mydatabase.processes (
     Total_Time INTEGER(10) DEFAULT(0),
     Created TIMESTAMP DEFAULT NOW(),
     Updated TIMESTAMP DEFAULT NOW(),
+    CPU_Time INTEGER(10) DEFAULT(0),
     PRIMARY KEY(Process_Name, Description));
