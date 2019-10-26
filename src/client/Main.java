@@ -6,7 +6,7 @@ import shell.ShellCommand;
 public class Main{
   public static void main(String[] args) {
 
-    Client.GUI(); //work on this last
+    //Client.GUI(); //work on this last
     ShellCommand.start();
     sqlControl.start();
 
