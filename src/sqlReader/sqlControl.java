@@ -23,7 +23,7 @@ public class sqlControl{
 
     try{
       Properties DBProps = new Properties();
-      FileInputStream in = new FileInputStream("src/sqlReader/db.properties");
+      FileInputStream in = new FileInputStream("sqlReader/db.properties");
       DBProps.load(in);
 
       sqlControl.user = DBProps.getProperty("MYSQL_DB_USERNAME");
