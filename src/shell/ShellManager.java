@@ -1,18 +1,15 @@
 package shell;
 
 import apps.AppEntry;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class ShellManager implements Runnable{
-  static volatile boolean flag = true;
+  private static boolean flag = true;
 
   public void run(){
     scanApps();
-    return;
   }
 
   private void scanApps(){
@@ -20,7 +17,7 @@ public class ShellManager implements Runnable{
     while(flag){
     try{
       Thread.sleep(3000);
-      getProcs();
+      getProcesses();
       AppEntry.checkEntries(); //remove closed applications
       AppEntry.printEntries(); //for debugging
 
@@ -28,18 +25,20 @@ public class ShellManager implements Runnable{
         e.printStackTrace();
       }
     }
+    try {
+      ShellCommand.closeStreams();
+    } catch (IOException e){e.printStackTrace();}
     System.out.println("Shutting down Shell Manager...");
-    return;
   }
 
-  private void getProcs() throws IOException{
+  private void getProcesses() throws IOException{
 
     String line;
-    String formatLine[];
+    String[] formatLine;
 
-    Stack<String> descriptions = new Stack<String>();
-    Stack<String> processNames = new Stack<String>();
-    Stack<Double> cpuTimes = new Stack<Double>();
+    Stack<String> descriptions = new Stack<>();
+    Stack<String> processNames = new Stack<>();
+    Stack<Double> cpuTimes = new Stack<>();
 
     ShellCommand.runCommand();
 
@@ -47,24 +46,26 @@ public class ShellManager implements Runnable{
       if(line.isEmpty()) continue; //ignore the whitespace
       formatLine = line.split(":"); //Expect size=2 (second entry may be empty)
 
-      if(formatLine[0].trim().equals("Description")){
-        if(formatLine[1].trim().isEmpty())
-          descriptions.push("-no description-");
-        else
-          descriptions.push(formatLine[1].trim());
+      switch (formatLine[0].trim()) {
+        case "Description":
+          if (formatLine[1].trim().isEmpty())
+            descriptions.push("-no description-");
+          else
+            descriptions.push(formatLine[1].trim());
+          break;
+        case "ProcessName":
+          if (formatLine[1].trim().isEmpty())
+            processNames.push("-no process name-");
+          else
+            processNames.push(formatLine[1].trim());
+          break;
+        case "CPU": //assumes cpu time not empty
+          cpuTimes.push(Double.parseDouble(formatLine[1].trim()));
+          break;
+        default:
+          System.out.println("Something went wrong...");
+          break;
       }
-      else if(formatLine[0].trim().equals("ProcessName")){
-        if(formatLine[1].trim().isEmpty())
-          processNames.push("-no process name-");
-        else
-          processNames.push(formatLine[1].trim());
-      }
-      else if(formatLine[0].trim().equals("CPU")){//assumes cpu time not empty
-        cpuTimes.push(Double.parseDouble(formatLine[1].trim()));
-      }
-
-      else
-        System.out.println("Something went wrong...");
     }
 
     if(descriptions.size() != processNames.size())
@@ -78,14 +79,13 @@ public class ShellManager implements Runnable{
         ){
         AppEntry.addEntry(newEntry); //do not add duplicate entries
       }
-      else{
-        //instead just update the CPU time by doing nothing
-      }
+      //instead just update the CPU time by doing nothing
+
     }
   }
 
-  public static void setFlag(boolean value){
-    flag = value;
+  public static void flipFlag(){
+    flag = !flag;
   }
 
   ShellManager(){

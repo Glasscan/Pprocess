@@ -1,16 +1,15 @@
 package apps;
 
 import java.util.ArrayList;
-import client.Client;
 
 public class AppEntry{
-  public static ArrayList<AppEntry> entryList = new ArrayList<AppEntry>();
-  String description;
-  String processName;
-  double initial_cpu_time; //necessary for tracking total session CPU Time
-  double cpu_time;
-  long application_start_time;
-  Boolean renew;
+  public static final ArrayList<AppEntry> entryList = new ArrayList<>();
+  private final String description;
+  private final String processName;
+  private double initial_cpu_time; //necessary for tracking total session CPU Time
+  private double cpu_time;
+  private long application_start_time;
+  private Boolean renew;
 
   public String getDesc(){
     return this.description;
@@ -37,9 +36,6 @@ public class AppEntry{
     this.application_start_time = System.nanoTime()/1000000000;
   }
 
-  public AppEntry(){
-  }
-
   public AppEntry(String desc, String procName, double cpuTime){
     this.description = desc;
     this.processName = procName;
@@ -56,19 +52,15 @@ public class AppEntry{
   public static void printEntries(){
     System.out.printf("%-30s %-30s  %-10s  %-10s \n",
     "|Process Name|", "|Description|", "|CPU Time|", "|Session Time|");
-    for(int i = 0; i < entryList.size(); i++){
+    for(AppEntry entry : entryList){
       System.out.printf("%-30.30s %-30.30s  %-10s  %-10s \n",
-      entryList.get(i).getProcName(),
-        entryList.get(i).getDesc(),
-           entryList.get(i).getCPUTime() - entryList.get(i).getInitialCPUTime(),
-             entryList.get(i).getSessionTime());
+      entry.getProcName(), entry.getDesc(), entry.getCPUTime() - entry.getInitialCPUTime(), entry.getSessionTime());
     }
     System.out.println("-----------------------------------------");
   }
 
   public static Boolean containsEntry(String procName, String desc, double cpuTime){
-    for(int i = 0; i < entryList.size(); i++){
-      AppEntry entry = entryList.get(i);
+    for(AppEntry entry : entryList) {
       if(entry.processName.equals(procName) && entry.description.equals(desc)){
         entry.renew = true;
         entry.cpu_time = cpuTime; //update the CPU Time
@@ -78,12 +70,8 @@ public class AppEntry{
     return false;
   }
 
-  public void renew(){
-    this.renew = true;
-  }
-
   public static void checkEntries(){ //remove all entries that are no longer seen by the shell
-    entryList.removeIf((n) -> (n.renew == false));
+    entryList.removeIf((n) -> (!n.renew));
     clearRenew();
   }
 

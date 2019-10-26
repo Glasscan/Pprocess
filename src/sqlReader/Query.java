@@ -2,21 +2,21 @@ package sqlReader;
 
 import apps.AppEntry;
 
-public class Query {
+class Query {
   private static final int MAX_LENGTH = 40; //max length in the database
-  String statement;
-  QueryType type;
+  private final String statement;
+  private final QueryType type;
 
-  public Query(String stmt){
+  Query(String stmt){
     this.statement = stmt;
     this.type = getType(stmt);
   }
 
-  public String getStatement(){
+  String getStatement(){
     return statement;
   }
 
-  public QueryType getType(){
+  QueryType getType(){
     return type;
   }
 
@@ -35,20 +35,18 @@ public class Query {
     }
   }
 
-  public Query(){
 
-  }
 
   //build a new select statement from input
+  /*
   public static String newSelectQuery(){
-    String statement = "";
-    return statement;
+    return "It ain't ready yet!";
   }
-
+*/
   //build a new insert/update statement
 
-  public static Query newUpdateQuery(AppEntry entry){
-    String statement = "";
+  static Query newUpdateQuery(AppEntry entry){
+    String statement;
     String processName = entry.getProcName();
     String description = entry.getDesc();
     double cpuTime = entry.getCPUTime() - entry.getInitialCPUTime();
@@ -64,6 +62,11 @@ public class Query {
       , processName, description, time, cpuTime, time, cpuTime);
 
     return new Query(statement);
+  }
+
+  public Query(){
+    this.statement = "SELECT * FROM test.processes";
+    this.type = QueryType.EXECUTE;
   }
 }
 

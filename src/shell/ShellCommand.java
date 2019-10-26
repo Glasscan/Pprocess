@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ShellCommand {
-  final static String command = "powershell.exe  " +
+  private final static String command = "powershell.exe  " +
   "get-process | where {$_.MainWindowTitle} | select Description, ProcessName, CPU | Format-List";
 
-  static Process proc;
-  static InputStreamReader in;
+  private static Process process;
+  private static InputStreamReader in;
   static BufferedReader out;
 
   public static void start() {
@@ -20,15 +20,16 @@ public class ShellCommand {
   }
 
   static void runCommand() throws IOException {
-    proc = Runtime.getRuntime().exec(command);
+    process = Runtime.getRuntime().exec(command);
     //retrieve the output from stdout/inputStream
     //bytes to chars
-    in = new InputStreamReader(proc.getInputStream());
+    in = new InputStreamReader(process.getInputStream());
     out = new BufferedReader(in);
   }
 
-  static void closeStreams (Process proc, BufferedReader out) throws IOException{
-    proc.getOutputStream().close();
+  static void closeStreams () throws IOException{
+    process.getOutputStream().close();
+    in.close();
     out.close();
   }
 }

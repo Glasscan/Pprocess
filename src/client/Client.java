@@ -4,8 +4,8 @@ package client;
 
 import javax.swing.*;
 
-public class Client {
-  public static void GUI(){
+class Client {
+  static void GUI(){
     JFrame f=new JFrame("Pprocess");//creating instance of JFrame
 
     JButton b=new JButton("Face me cowards!");//creating instance of JButton

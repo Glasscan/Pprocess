@@ -16,10 +16,10 @@ public class sqlControl{
   private static String user = "";
   private static String password = "";
   private static String db_url = "";
-  private static BlockingQueue<Query> statements = new LinkedBlockingQueue<Query>();
+  static final BlockingQueue<Query> statements = new LinkedBlockingQueue<>();
 
 
-  public static void setup(){
+  private static void setup(){
 
     try{
       Properties DBProps = new Properties();
@@ -55,10 +55,10 @@ public class sqlControl{
     try {
         Connection con = DriverManager.getConnection(
           sqlControl.db_url, sqlControl.user, sqlControl.password);
-        StmtManager manager = new StmtManager(statements, con);
+        StmtManager manager = new StmtManager(con);
         new Thread(manager, "Statement Manager").start();
 
-        String queryStmt = "";
+        String queryStmt;
         while(true){ //currently requires input rather than automatic
           queryStmt = newSTMT.nextLine();
           if(queryStmt.length() < 6) continue; //so it doesn't break
@@ -68,8 +68,8 @@ public class sqlControl{
         }
 
         updateOnExit();
-        StmtManager.setFlag(false);
-        shell.ShellManager.setFlag(false);
+        StmtManager.flipFlag();
+        shell.ShellManager.flipFlag();
         Thread.sleep(1000); //add a buffer
         con.close();
       }

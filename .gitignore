@@ -1,2 +1,2 @@
 *.class
-/sqlReader/db.properties
+/src/sqlReader/db.properties

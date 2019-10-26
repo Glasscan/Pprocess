@@ -110,3 +110,5 @@ Added a batch file for convenience in compiling and running.
 ---Oct 25 2019---
 
 Shell*.java files are fine.
+Moving over from Atom.io to IntelliJ for test cases.
+Did a lot of clean up with IntelliJ.

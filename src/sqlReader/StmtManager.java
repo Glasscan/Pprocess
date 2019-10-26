@@ -1,13 +1,13 @@
 package sqlReader;
 
-import java.util.concurrent.LinkedBlockingQueue;
+//import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.sql.*;
 
-public class StmtManager implements Runnable{
+class StmtManager implements Runnable{
   private final BlockingQueue<Query> statements;
   private final Connection con; //connection must be passed on
-  static volatile boolean flag = true;
+  private static boolean flag = true;
 
   public void run() {
     try {
@@ -15,13 +15,12 @@ public class StmtManager implements Runnable{
         consume(statements.take()); //remove Queue item
       }
       System.out.println("Shutting down Statement Manager...");
-      return;
-    } catch (InterruptedException ex) {
-      System.out.println(ex);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
   }
 
-  void consume(Query query) {
+  private void consume(Query query) {
     String statement = query.getStatement();
     QueryType type = query.getType();
     try{
@@ -53,13 +52,12 @@ public class StmtManager implements Runnable{
     }catch (SQLException | InterruptedException e) {e.printStackTrace();}
   }
 
-
-  static void setFlag(boolean value){
-    flag = value;
+  static void flipFlag(){
+    flag = !flag;
   }
 
-  StmtManager(BlockingQueue<Query> q, Connection con) {
+  StmtManager(Connection con) {
     this.con = con;
-    statements = q;
+    statements = sqlControl.statements;
   }
 }
