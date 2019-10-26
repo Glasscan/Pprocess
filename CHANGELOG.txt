@@ -96,3 +96,17 @@ Added CPU(s) to the shell command and updated AppEntry to support it.
 Made the printEntries() function output a "formatted" string.
 
 Currently working on building new SQL statements. Must make updates automatic.
+
+---Oct 22 2019---
+
+Added way to cycle through AppEntries using lambda function.
+Made both the manager classes public as they will need to be accessible by
+the client class.
+Trying to reorganize the ShellManager.java and ShellCommand.java files
+
+Added new git branch in case the reorganization of the above turns out horribly.
+Added a batch file for convenience in compiling and running.
+
+---Oct 25 2019---
+
+Shell*.java files are fine.

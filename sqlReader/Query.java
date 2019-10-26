@@ -3,6 +3,7 @@ package sqlReader;
 import apps.AppEntry;
 
 public class Query {
+  private static final int MAX_LENGTH = 40; //max length in the database
   String statement;
   QueryType type;
 
@@ -46,13 +47,15 @@ public class Query {
 
   //build a new insert/update statement
 
-  public static String newUpdateQuery(AppEntry entry){
+  public static Query newUpdateQuery(AppEntry entry){
     String statement = "";
     String processName = entry.getProcName();
     String description = entry.getDesc();
     double cpuTime = entry.getCPUTime() - entry.getInitialCPUTime();
     long time = entry.getSessionTime();
     entry.resetTime();
+    processName = processName.substring(0, Math.min(processName.length(), MAX_LENGTH));
+    description = description.substring(0, Math.min(description.length(), MAX_LENGTH));
     statement = String.format("INSERT INTO " +
       "processes(Process_Name, Description, Total_Time, CPU_Time) " +
       "VALUES('%s', '%s', '%d', '%f') " +
@@ -60,7 +63,7 @@ public class Query {
       "Total_Time = Total_Time + %d, CPU_Time = CPU_Time + %f;"
       , processName, description, time, cpuTime, time, cpuTime);
 
-    return statement;
+    return new Query(statement);
   }
 }
 

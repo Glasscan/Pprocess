@@ -4,18 +4,18 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.sql.*;
 
-import sqlReader.StmtManager;
-
-class StmtManager implements Runnable{
+public class StmtManager implements Runnable{
   private final BlockingQueue<Query> statements;
   private final Connection con; //connection must be passed on
-
+  static volatile boolean flag = true;
 
   public void run() {
     try {
-      while (true) {
+      while (flag) {
         consume(statements.take()); //remove Queue item
       }
+      System.out.println("Shutting down Statement Manager...");
+      return;
     } catch (InterruptedException ex) {
       System.out.println(ex);
     }
@@ -25,6 +25,10 @@ class StmtManager implements Runnable{
     String statement = query.getStatement();
     QueryType type = query.getType();
     try{
+      if(statement.equals("exodus")) {
+        Thread.sleep(1000); //buffer
+        return;
+      }
       int i = 1;
       Statement stmt = con.createStatement();
       ResultSet rs;
@@ -33,7 +37,7 @@ class StmtManager implements Runnable{
       }
       else{
         stmt.executeUpdate(statement);
-        System.out.println("cats"); //for debugging
+        //System.out.println("cats"); //for debugging
         return;
       }
       ResultSetMetaData rsData = rs.getMetaData();
@@ -46,7 +50,12 @@ class StmtManager implements Runnable{
         i = 1;
         System.out.println();
       }
-    }catch (SQLException e) {e.printStackTrace();}
+    }catch (SQLException | InterruptedException e) {e.printStackTrace();}
+  }
+
+
+  static void setFlag(boolean value){
+    flag = value;
   }
 
   StmtManager(BlockingQueue<Query> q, Connection con) {

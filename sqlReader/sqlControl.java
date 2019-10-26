@@ -12,11 +12,11 @@ import java.util.Properties;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-
 public class sqlControl{
   private static String user = "";
   private static String password = "";
   private static String db_url = "";
+  private static BlockingQueue<Query> statements = new LinkedBlockingQueue<Query>();
 
 
   public static void setup(){
@@ -41,8 +41,7 @@ public class sqlControl{
   }
 
   public static void start(){
-    BlockingQueue<Query> statements = new LinkedBlockingQueue<Query>();
-    Scanner newSTMT = new Scanner(System.in);
+    Scanner newSTMT = new Scanner(System.in); //remove this later
   /*  try{
       DriverManager.registerDriver(
         (Driver) Class.forName("com.mysql.cj.jdbc.Driver").newInstance()
@@ -57,23 +56,34 @@ public class sqlControl{
         Connection con = DriverManager.getConnection(
           sqlControl.db_url, sqlControl.user, sqlControl.password);
         StmtManager manager = new StmtManager(statements, con);
-        new Thread(manager).start();
+        new Thread(manager, "Statement Manager").start();
 
         String queryStmt = "";
         while(true){ //currently requires input rather than automatic
           queryStmt = newSTMT.nextLine();
-          if(queryStmt.equals("exodus")) break; //temporary for debugging
-          else if(queryStmt.length() < 6) continue; //so it doesn't break
+          if(queryStmt.length() < 6) continue; //so it doesn't break
           Query myQuery = new Query(queryStmt);
           statements.put(myQuery);
-
+          if(queryStmt.equals("exodus")) break; //temporary for debugging
         }
-        System.out.println("Closing connection...");
+
+        updateOnExit();
+        StmtManager.setFlag(false);
+        shell.ShellManager.setFlag(false);
+        Thread.sleep(1000); //add a buffer
         con.close();
-       }
-       // Handle any errors that may have occurred.
+      }
        catch (SQLException | InterruptedException e) {
            e.printStackTrace();
        }
+
+    }
+
+    private static void updateOnExit(){
+      AppEntry.entryList.forEach(x -> {
+        try{
+          statements.put(Query.newUpdateQuery(x));
+        } catch (InterruptedException e) {e.printStackTrace();}
+      });
     }
 }

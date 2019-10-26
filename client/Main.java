@@ -10,7 +10,7 @@ public class Main{
   public static void main(String[] args) throws IOException{
 
     //Client.GUI(); //work on this last
-    ShellCommand.getProcs();
+    ShellCommand.start();
     sqlControl.start();
 
   }

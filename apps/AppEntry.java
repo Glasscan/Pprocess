@@ -52,6 +52,7 @@ public class AppEntry{
     entryList.add(entry);
   }
 
+//for debugging
   public static void printEntries(){
     System.out.printf("%-30s %-30s  %-10s  %-10s \n",
     "|Process Name|", "|Description|", "|CPU Time|", "|Session Time|");
@@ -70,7 +71,7 @@ public class AppEntry{
       AppEntry entry = entryList.get(i);
       if(entry.processName.equals(procName) && entry.description.equals(desc)){
         entry.renew = true;
-        entry.cpu_time = cpuTime;
+        entry.cpu_time = cpuTime; //update the CPU Time
         return true;
       }
     }
