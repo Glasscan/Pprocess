@@ -71,8 +71,8 @@ public class AppEntry{
   }
 
   public static void checkEntries(){ //remove all entries that are no longer seen by the shell
-    entryList.removeIf((n) -> (!n.renew));
-    clearRenew();
+      entryList.removeIf((n) -> (!n.renew));
+      clearRenew();
   }
 
   private static void clearRenew(){
