@@ -1,4 +1,7 @@
-package apps;
+package main.apps;
+
+import main.sqlReader.Query;
+import main.sqlReader.sqlControl;
 
 import java.util.ArrayList;
 
@@ -71,8 +74,13 @@ public class AppEntry{
   }
 
   public static void checkEntries(){ //remove all entries that are no longer seen by the shell
-    entryList.removeIf((n) -> (!n.renew));
-    clearRenew();
+      for ( AppEntry entry : entryList){
+        if(!entry.renew){
+          sqlControl.newStatement(Query.newUpdateQuery(entry));
+        }
+      }
+      entryList.removeIf(x-> !x.renew); //remove after pushing
+      clearRenew();
   }
 
   private static void clearRenew(){

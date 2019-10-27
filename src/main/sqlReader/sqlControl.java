@@ -1,6 +1,6 @@
-package sqlReader;
+package main.sqlReader;
 
-import apps.AppEntry;
+import main.apps.AppEntry;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -62,14 +62,15 @@ public class sqlControl{
         while(true){ //currently requires input rather than automatic
           queryStmt = newSTMT.nextLine();
           if(queryStmt.length() < 6) continue; //so it doesn't break
+          else if(queryStmt.equals("exodus")) break; //temporary for debugging
           Query myQuery = new Query(queryStmt);
           statements.put(myQuery);
-          if(queryStmt.equals("exodus")) break; //temporary for debugging
+
         }
 
         updateOnExit();
         StmtManager.flipFlag();
-        shell.ShellManager.flipFlag();
+        main.shell.ShellManager.flipFlag();
         Thread.sleep(1000); //add a buffer
         con.close();
       }
@@ -79,11 +80,22 @@ public class sqlControl{
 
     }
 
-    private static void updateOnExit(){
-      AppEntry.entryList.forEach(x -> {
-        try{
-          statements.put(Query.newUpdateQuery(x));
-        } catch (InterruptedException e) {e.printStackTrace();}
-      });
+    public static void newStatement(Query query){
+        try {
+            statements.put(query);
+        } catch (InterruptedException e){e.printStackTrace();}
     }
+
+    private static void updateOnExit() {
+        synchronized (AppEntry.entryList) {
+            AppEntry.entryList.forEach(x -> {
+                try {
+                    statements.put(Query.newUpdateQuery(x));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+
 }

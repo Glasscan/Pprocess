@@ -1,4 +1,4 @@
-package client;
+package main.client;
 
 //work on this last
 

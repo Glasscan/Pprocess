@@ -6,6 +6,8 @@ All empty files
 compile with: javac -cp "C:\javalib\mysql-connector-java-8.0.16.jar;." client/Main.java
 run with: java -cp ".;C:\javalib\mysql-connector-java-8.0.16.jar" client.Main
 
+***USING BATCH FILE OR IDE NOW!***
+
 *Can ignore the .jar files if they are already included for you.
 
 The client package holds the Main.java file which simply runs the program.
@@ -87,6 +89,7 @@ from once every 5 seconds to every 1 second.
 Also considering adding more values such as total CPU time (can retrieve
 average CPU time from this).
 
+
 ---Oct 21 2019---
 Added total CPU time to the table via:
 ALTER TABLE test.processes
@@ -96,6 +99,7 @@ Added CPU(s) to the shell command and updated AppEntry to support it.
 Made the printEntries() function output a "formatted" string.
 
 Currently working on building new SQL statements. Must make updates automatic.
+
 
 ---Oct 22 2019---
 
@@ -107,8 +111,25 @@ Trying to reorganize the ShellManager.java and ShellCommand.java files
 Added new git branch in case the reorganization of the above turns out horribly.
 Added a batch file for convenience in compiling and running.
 
+
 ---Oct 25 2019---
 
 Shell*.java files are fine.
 Moving over from Atom.io to IntelliJ for test cases.
 Did a lot of clean up with IntelliJ.
+
+
+---Oct 26 2019---
+
+Added synchronization for entryList.
+Fixed a nasty bug preventing updates to the MySQL server.
+
+
+---Oct 27 2019---
+
+Bug-fix; Now uploads closed programs instead of removing and forgetting about them.
+
+
+---Oct 28 2019---
+
+Added the "main" directory below "src."

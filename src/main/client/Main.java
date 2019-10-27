@@ -1,9 +1,9 @@
-package client;
+package main.client;
 
-import sqlReader.sqlControl;
-import shell.ShellCommand;
+import main.sqlReader.sqlControl;
+import main.shell.ShellCommand;
 
-public class Main{
+class Main{
   public static void main(String[] args) {
 
     //Client.GUI(); //work on this last

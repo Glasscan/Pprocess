@@ -1,4 +1,4 @@
-package sqlReader;
+package main.sqlReader;
 
 //import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -11,7 +11,7 @@ class StmtManager implements Runnable{
 
   public void run() {
     try {
-      while (flag) {
+      while (flag || !statements.isEmpty()) {
         consume(statements.take()); //remove Queue item
       }
       System.out.println("Shutting down Statement Manager...");
@@ -24,10 +24,6 @@ class StmtManager implements Runnable{
     String statement = query.getStatement();
     QueryType type = query.getType();
     try{
-      if(statement.equals("exodus")) {
-        Thread.sleep(1000); //buffer
-        return;
-      }
       int i = 1;
       Statement stmt = con.createStatement();
       ResultSet rs;
@@ -49,7 +45,7 @@ class StmtManager implements Runnable{
         i = 1;
         System.out.println();
       }
-    }catch (SQLException | InterruptedException e) {e.printStackTrace();}
+    }catch (SQLException e) {e.printStackTrace();}
   }
 
   static void flipFlag(){

@@ -1,8 +1,8 @@
-package sqlReader;
+package main.sqlReader;
 
-import apps.AppEntry;
+import main.apps.AppEntry;
 
-class Query {
+public class Query {
   private static final int MAX_LENGTH = 40; //max length in the database
   private final String statement;
   private final QueryType type;
@@ -45,7 +45,7 @@ class Query {
 */
   //build a new insert/update statement
 
-  static Query newUpdateQuery(AppEntry entry){
+  public static Query newUpdateQuery(AppEntry entry){
     String statement;
     String processName = entry.getProcName();
     String description = entry.getDesc();
@@ -64,6 +64,7 @@ class Query {
     return new Query(statement);
   }
 
+  //default
   public Query(){
     this.statement = "SELECT * FROM test.processes";
     this.type = QueryType.EXECUTE;

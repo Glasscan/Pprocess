@@ -1,6 +1,6 @@
-package shell;
+package main.shell;
 
-import apps.AppEntry;
+import main.apps.AppEntry;
 
 import java.io.IOException;
 import java.util.Stack;
@@ -16,11 +16,12 @@ public class ShellManager implements Runnable{
 
     while(flag){
     try{
-      Thread.sleep(3000);
       getProcesses();
-      AppEntry.checkEntries(); //remove closed applications
-      AppEntry.printEntries(); //for debugging
-
+      synchronized (AppEntry.entryList) {
+        AppEntry.checkEntries(); //remove closed applications
+        AppEntry.printEntries(); //for debugging
+      }
+      Thread.sleep(3000); //wait time between each scan
     } catch(InterruptedException | IOException e){
         e.printStackTrace();
       }
@@ -28,6 +29,7 @@ public class ShellManager implements Runnable{
     try {
       ShellCommand.closeStreams();
     } catch (IOException e){e.printStackTrace();}
+    AppEntry.clearEntries();
     System.out.println("Shutting down Shell Manager...");
   }
 
@@ -74,10 +76,12 @@ public class ShellManager implements Runnable{
     while(!descriptions.isEmpty() && !processNames.isEmpty()){
       AppEntry newEntry = new AppEntry(
         descriptions.pop(), processNames.pop(), cpuTimes.pop());
-      if(!AppEntry.containsEntry(
-          newEntry.getProcName(), newEntry.getDesc(), newEntry.getCPUTime())
-        ){
-        AppEntry.addEntry(newEntry); //do not add duplicate entries
+      synchronized (AppEntry.entryList) {
+        if (!AppEntry.containsEntry(
+                newEntry.getProcName(), newEntry.getDesc(), newEntry.getCPUTime()
+        )) {
+          AppEntry.addEntry(newEntry); //do not add duplicate entries
+        }
       }
       //instead just update the CPU time by doing nothing
 
