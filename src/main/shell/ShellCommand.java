@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 
 public class ShellCommand {
   private final static String command = "powershell.exe  " +
-  "get-process | where {$_.MainWindowTitle} | select Description, ProcessName, CPU | Format-List";
+  "get-process | where {$_.MainWindowTitle} | select ProcessName, Description, CPU | Format-List";
 
   private static Process process;
   private static InputStreamReader in;

@@ -1,6 +1,6 @@
 package main.sqlReader;
 
-import main.apps.AppEntry;
+import main.apps.AppList;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -67,11 +67,11 @@ public class sqlControl{
           statements.put(myQuery);
 
         }
-
+        AppList.printEntries(); //for practical use
         updateOnExit();
         StmtManager.flipFlag();
         main.shell.ShellManager.flipFlag();
-        Thread.sleep(1000); //add a buffer
+        Thread.sleep(1000); //add a buffer for main thread
         con.close();
       }
        catch (SQLException | InterruptedException e) {
@@ -87,8 +87,8 @@ public class sqlControl{
     }
 
     private static void updateOnExit() {
-        synchronized (AppEntry.entryList) {
-            AppEntry.entryList.forEach(x -> {
+        synchronized (AppList.getList()) {
+            AppList.getEntryList().forEach(x -> {
                 try {
                     statements.put(Query.newUpdateQuery(x));
                 } catch (InterruptedException e) {
@@ -97,5 +97,4 @@ public class sqlControl{
             });
         }
     }
-
 }

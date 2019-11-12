@@ -1,6 +1,7 @@
 package main.shell;
 
 import main.apps.AppEntry;
+import main.apps.AppList;
 
 import java.io.IOException;
 import java.util.Stack;
@@ -17,9 +18,9 @@ public class ShellManager implements Runnable{
     while(flag){
     try{
       getProcesses();
-      synchronized (AppEntry.entryList) {
-        AppEntry.checkEntries(); //remove closed applications
-        AppEntry.printEntries(); //for debugging
+      synchronized (AppList.getList()) {
+        AppList.checkEntries(); //remove closed applications
+        //AppList.printEntries(); //for debugging
       }
       Thread.sleep(3000); //wait time between each scan
     } catch(InterruptedException | IOException e){
@@ -29,7 +30,7 @@ public class ShellManager implements Runnable{
     try {
       ShellCommand.closeStreams();
     } catch (IOException e){e.printStackTrace();}
-    AppEntry.clearEntries();
+    AppList.clearEntries();
     System.out.println("Shutting down Shell Manager...");
   }
 
@@ -46,20 +47,20 @@ public class ShellManager implements Runnable{
 
     while((line = ShellCommand.out.readLine()) != null){
       if(line.isEmpty()) continue; //ignore the whitespace
-      formatLine = line.split(":"); //Expect size=2 (second entry may be empty)
+      formatLine = line.split(":"); //Expect size=3 (second entry (Description) may be empty)
 
       switch (formatLine[0].trim()) {
-        case "Description":
-          if (formatLine[1].trim().isEmpty())
-            descriptions.push("-no description-");
-          else
-            descriptions.push(formatLine[1].trim());
-          break;
         case "ProcessName":
           if (formatLine[1].trim().isEmpty())
             processNames.push("-no process name-");
           else
             processNames.push(formatLine[1].trim());
+          break;
+        case "Description":
+          if (formatLine[1].trim().isEmpty())
+            descriptions.push("-no description-");
+          else
+            descriptions.push(formatLine[1].trim());
           break;
         case "CPU": //assumes cpu time not empty
           cpuTimes.push(Double.parseDouble(formatLine[1].trim()));
@@ -75,16 +76,15 @@ public class ShellManager implements Runnable{
 
     while(!descriptions.isEmpty() && !processNames.isEmpty()){
       AppEntry newEntry = new AppEntry(
-        descriptions.pop(), processNames.pop(), cpuTimes.pop());
-      synchronized (AppEntry.entryList) {
-        if (!AppEntry.containsEntry(
+        processNames.pop(), descriptions.pop(), cpuTimes.pop());
+      synchronized (AppList.getList()) {
+        if (!AppList.containsEntry(
                 newEntry.getProcName(), newEntry.getDesc(), newEntry.getCPUTime()
         )) {
-          AppEntry.addEntry(newEntry); //do not add duplicate entries
+          AppList.addEntry(newEntry); //do not add duplicate entries
         }
       }
       //instead just update the CPU time by doing nothing
-
     }
   }
 

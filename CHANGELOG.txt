@@ -84,7 +84,7 @@ I don't know if this was intentional, but most people probably would not mind
 it.
 
 Increased the frequency at which the ShellManager threads check for Apps
-from once every 5 seconds to every 1 second.
+from once every 5 seconds to every 3 second.
 
 Also considering adding more values such as total CPU time (can retrieve
 average CPU time from this).
@@ -132,4 +132,17 @@ Bug-fix; Now uploads closed programs instead of removing and forgetting about th
 
 ---Oct 28 2019---
 
-Added the "main" directory below "src."
+Added the "main" directory below "src.
+
+
+---Oct 29 2019---
+
+Swapped the process name and description positions from the shell command. Changed ShellManager.java accordingly.
+
+***Should optimize by SUSPENDING a closed application's entry rather than uploading immediately. Will reduce the amount
+of SQL queries.
+
+
+---Nov 11 2019---
+
+Added AppList class to make the entryList a singleton.
