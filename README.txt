@@ -1,4 +1,4 @@
-Pprocess
+Pprocess (Application Tracker)
 
 This is a Windows desktop application that I made to track the usage of
 applications (not background processes) that are running or have run on the
