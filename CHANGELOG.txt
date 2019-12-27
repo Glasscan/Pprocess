@@ -3,8 +3,10 @@
 created packages: client, apps, shell, sqlReader
 All empty files
 
-compile with: javac -cp "C:\javalib\mysql-connector-java-8.0.16.jar;." client/Main.java
-run with: java -cp ".;C:\javalib\mysql-connector-java-8.0.16.jar" client.Main
+compile with: javac -cp ".;C:\javalib\mysql-connector-java-8.0.16.jar" client/*.java sqlReader/*.java apps/*.java shell/*.java
+run with: java -cp ".;..;C:\javalib\mysql-connector-java-8.0.16.jar" main.client.Main
+
+*see batch file
 
 ***USING BATCH FILE OR IDE NOW!***
 
@@ -146,3 +148,17 @@ of SQL queries.
 ---Nov 11 2019---
 
 Added AppList class to make the entryList a singleton.
+
+
+---Dec 02 2019---
+
+***Making a bee-line to finish, because I want to start working on Deckard
+
+Added SuspendedList class to hold previously seen apps that may reappear.
+
+
+---Dec 27 2019---
+
+Scratch that. Have not been able to work on this.
+
+Will put this on hold and focus on Deckard.
